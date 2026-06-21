@@ -1,4 +1,4 @@
----
+﻿---
 name: token-query
 description: "查询 Jarvis Token Center → 调用 DeepSeek API 获取实时 Token 数据 → 显示赛博朋克 Dashboard"
 ---
@@ -16,7 +16,7 @@ description: "查询 Jarvis Token Center → 调用 DeepSeek API 获取实时 To
 
 ## 前置条件
 
-- 项目路径：`E:\Users\admin\Documents\测试\ai-token-monitor`
+- 项目路径：`/path/to/ai-token-monitor`
 - 开发服务器运行在 `http://localhost:3000`
 - API Key 已通过首次配置保存到 `config/deepseek-config.json`
 
@@ -25,7 +25,7 @@ description: "查询 Jarvis Token Center → 调用 DeepSeek API 获取实时 To
 如果服务器未运行，先启动：
 
 ```powershell
-$project = "E:\Users\admin\Documents\测试\ai-token-monitor"
+$project = "/path/to/ai-token-monitor"
 Get-Process -Name "node" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -like "*next*dev*" } | Stop-Process -Force -ErrorAction SilentlyContinue
 Start-Process -WindowStyle Hidden powershell -ArgumentList "-Command cd '$project'; npm run dev"
 Start-Sleep -Seconds 8
@@ -109,4 +109,5 @@ Jarvis Token Center — 查询结果
 - DeepSeek 没有公开账单查询 API，所以今日消费/月消费等数据不可用
 - Dashboard 使用本机 localhost:3000，浏览器需能访问该地址
 - 所有数据通过 API 获取，无需 mock 或随机数
+
 
