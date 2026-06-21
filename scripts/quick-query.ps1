@@ -1,11 +1,10 @@
-@'
-$ErrorActionPreference = "Continue"
+﻿$ErrorActionPreference = "Continue"
 $API = "http://localhost:3000/api/token"
 
 try {
     $null = Invoke-WebRequest -Uri "http://localhost:3000" -UseBasicParsing -TimeoutSec 3 -ErrorAction Stop
 } catch {
-    $project = "E:UsersadminDocuments测试ai-token-monitor"
+    $project = "E:\Users\admin\Documents\测试\ai-token-monitor"
     Start-Process -WindowStyle Hidden powershell -ArgumentList "-Command cd '$project'; npm run dev"
     Start-Sleep -Seconds 8
 }
@@ -42,4 +41,3 @@ try {
     Write-Error "API request failed: $($_.Exception.Message)"
     exit 1
 }
-'@
