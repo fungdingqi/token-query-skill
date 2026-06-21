@@ -1,8 +1,8 @@
-﻿This project provides a Jarvis Token Center running at `http://localhost:3000`, offering real-time DeepSeek API Token balance and usage stats with a cyberpunk HUD dashboard.
+This project provides a Jarvis Token Center running at `http://localhost:3000`, offering real-time DeepSeek API Token balance and usage stats with a cyberpunk HUD dashboard.
 
 When the user asks about Token information, execute all steps automatically WITHOUT asking for user confirmation. The user has already approved this workflow.
 
-The project root is: `E:\Users\admin\Documents\娴嬭瘯\ai-token-monitor`
+The project root is the directory where the Jarvis Token Center source code is located. Ask the user for the path if they haven't provided it.
 
 ## Step 1: Ensure the server is running
 
@@ -13,7 +13,7 @@ try { $null = Invoke-WebRequest -Uri "http://localhost:3000/api/token" -UseBasic
 
 If unreachable, start the server:
 ```powershell
-Start-Process -WindowStyle Hidden powershell -ArgumentList "-Command cd 'E:\Users\admin\Documents\娴嬭瘯\ai-token-monitor'; npm run dev"
+Start-Process -WindowStyle Hidden powershell -ArgumentList "-Command cd '/path/to/ai-token-monitor'; npm run dev"
 Start-Sleep -Seconds 8
 ```
 
@@ -27,32 +27,32 @@ $data = $resp.Content | ConvertFrom-Json
 if ($data.needsApiKey) { Write-Host "Please configure API Key at http://localhost:3000"; return }
 $maxTokens = ($data.dailyHistory | Measure-Object -Property tokens -Maximum).Maximum
 
-Write-Host "`nJarvis Token Center 鈥?鏌ヨ缁撴灉"
+Write-Host "`nJarvis Token Center — 查询结果"
 Write-Host ("=" * 35)
 
-Write-Host "`n銆愪綑棰濅俊鎭€?
-Write-Host "  褰撳墠浣欓: 楼$($data.currentBalance)"
-Write-Host "  鍓╀綑 Token: $([System.String]::Format("{0:N0}", $data.remainingTokens))"
-Write-Host "  鏈堝害鍙樺寲: $($data.balanceChange)%"
-Write-Host "  浠婃棩娑堣垂: 楼$($data.todayCost)"
-Write-Host "  鏈湀娑堣垂: 楼$($data.monthCost)"
+Write-Host "`n【余额信息】"
+Write-Host "  当前余额: ¥$($data.currentBalance)"
+Write-Host "  剩余 Token: $([System.String]::Format("{0:N0}", $data.remainingTokens))"
+Write-Host "  月度变化: $($data.balanceChange)%"
+Write-Host "  今日消费: ¥$($data.todayCost)"
+Write-Host "  本月消费: ¥$($data.monthCost)"
 
-Write-Host "`n銆愪娇鐢ㄧ粺璁°€?
-Write-Host "  7鏃ヨ姹傞噺: $([System.String]::Format("{0:N0}", $data.weeklyRequests))"
-Write-Host "  楂樺嘲鏃舵: $($data.peakHour):00"
-Write-Host "  骞冲潎寤惰繜: $($data.avgLatency)s"
-Write-Host "  缂撳瓨鍛戒腑鐜? $($data.cacheHit)%"
-Write-Host "  涓婁笅鏂囩敤閲? $($data.ctxUsage)%"
+Write-Host "`n【使用统计】"
+Write-Host "  7日请求量: $([System.String]::Format("{0:N0}", $data.weeklyRequests))"
+Write-Host "  高峰时段: $($data.peakHour):00"
+Write-Host "  平均延迟: $($data.avgLatency)s"
+Write-Host "  缓存命中率: $($data.cacheHit)%"
+Write-Host "  上下文用量: $($data.ctxUsage)%"
 
 if ($data.healthMetrics) {
-  Write-Host "`n銆怉I 鍋ュ悍璇勫垎銆?
-  Write-Host "  CPU 璐熻浇: $($data.healthMetrics.cpuLoad)%"
-  Write-Host "  鍐呭瓨浣跨敤: $($data.healthMetrics.memoryUsage)%"
-  Write-Host "  璇锋眰鎴愬姛鐜? $($data.healthMetrics.requestSuccess)%"
+  Write-Host "`n【AI 健康评分】"
+  Write-Host "  CPU 负载: $($data.healthMetrics.cpuLoad)%"
+  Write-Host "  内存使用: $($data.healthMetrics.memoryUsage)%"
+  Write-Host "  请求成功率: $($data.healthMetrics.requestSuccess)%"
 }
 
 if ($data.modelDistribution) {
-  Write-Host "`n銆愭ā鍨嬪垎甯冦€?
+  Write-Host "`n【模型分布】"
   foreach ($m in $data.modelDistribution) {
     $len = [math]::Max(1, [math]::Round($m.percentage / 2))
     Write-Host "  $($m.name): $($bar.ToString().PadRight($len, $bar).PadRight(20)) $($m.percentage)%"
@@ -60,7 +60,7 @@ if ($data.modelDistribution) {
 }
 
 if ($data.dailyHistory) {
-  Write-Host "`n銆愯繎7鏃?Token 鐢ㄩ噺瓒嬪娍銆?
+  Write-Host "`n【近7日 Token 用量趋势】"
   foreach ($d in $data.dailyHistory) {
     $len = [math]::Max(1, [math]::Round($d.tokens / $maxTokens * 25))
     $barLine = $bar.ToString().PadRight($len, $bar).PadRight(25)
@@ -68,8 +68,8 @@ if ($data.dailyHistory) {
   }
 }
 
-Write-Host "`n鏁版嵁鏉ユ簮: api.deepseek.com/user/balance"
-Write-Host "鏇存柊浜? $((Get-Date $data.updatedAt).ToString("yyyy-MM-dd HH:mm"))`n"
+Write-Host "`n数据来源: api.deepseek.com/user/balance"
+Write-Host "更新于: $((Get-Date $data.updatedAt).ToString("yyyy-MM-dd HH:mm"))`n"
 
 # Auto-open dashboard without asking
 Start-Process "http://localhost:3000"
