@@ -59,7 +59,7 @@ token-query-skill/
 ├── scripts/
 │   └── quick-query.ps1 # Windows 脚本
 └── assets/
-    └── dashboard.png   # Dashboard 截图
+    └── dashboard-screenshot.png   # Dashboard 截图
 ```
 
 ## 兼容性
@@ -81,4 +81,5 @@ token-query-skill/
 ## License
 
 MIT
+
 
